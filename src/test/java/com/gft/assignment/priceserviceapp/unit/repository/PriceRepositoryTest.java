@@ -9,7 +9,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,57 +39,55 @@ public class PriceRepositoryTest {
         priceRepository.save(price4);
     }
 
-
     @Test
-    public void testFindFirstByProductIdAndBrandIdAndStartDate() {
+    public void testFindPricesByProductIdAndBrandIdAndStartDate() {
         LocalDateTime applicationDate = LocalDateTime.of(2020, 6, 14, 10, 0);
-        Optional<Price> foundPrice = priceRepository.findTopByProductIdAndBrandIdAndStartDate(
+        List<Price> foundPrices = priceRepository.findPricesByProductIdAndBrandIdAndStartDate(
                 35455L, 1, applicationDate);
 
-        assertTrue(foundPrice.isPresent());
-        assertEquals(new BigDecimal("35.50"), foundPrice.get().getPrice());
+        assertFalse(foundPrices.isEmpty());
+        assertEquals(new BigDecimal("35.50"), foundPrices.get(0).getPrice());
     }
 
     @Test
-    public void testFindFirstByProductIdAndBrandIdAndStartDate_ValidPrice() {
+    public void testFindPricesByProductIdAndBrandIdAndStartDate_ValidPrice() {
         LocalDateTime applicationDate = LocalDateTime.of(2020, 6, 14, 15, 30);
-        Optional<Price> foundPrice = priceRepository.findTopByProductIdAndBrandIdAndStartDate(
+        List<Price> foundPrices = priceRepository.findPricesByProductIdAndBrandIdAndStartDate(
                 35455L, 1, applicationDate);
 
-        assertTrue(foundPrice.isPresent());
-        assertEquals(new BigDecimal("25.45"), foundPrice.get().getPrice());
+        assertFalse(foundPrices.isEmpty());
+        assertEquals(new BigDecimal("25.45"), foundPrices.get(0).getPrice());
     }
 
     @Test
-    public void testFindFirstByProductIdAndBrandIdAndStartDate_AnotherValidPrice() {
+    public void testFindPricesByProductIdAndBrandIdAndStartDate_AnotherValidPrice() {
         LocalDateTime applicationDate = LocalDateTime.of(2020, 6, 15, 10, 0);
-        Optional<Price> foundPrice = priceRepository.findTopByProductIdAndBrandIdAndStartDate(
+        List<Price> foundPrices = priceRepository.findPricesByProductIdAndBrandIdAndStartDate(
                 35455L, 1, applicationDate);
 
-        assertTrue(foundPrice.isPresent());
-        assertEquals(new BigDecimal("30.50"), foundPrice.get().getPrice());
+        assertFalse(foundPrices.isEmpty());
+        assertEquals(new BigDecimal("30.50"), foundPrices.get(0).getPrice());
     }
 
     @Test
-    public void testFindFirstByProductIdAndBrandIdAndStartDate_LatestValidPrice() {
+    public void testFindPricesByProductIdAndBrandIdAndStartDate_LatestValidPrice() {
         LocalDateTime applicationDate = LocalDateTime.of(2020, 6, 15, 17, 0);
-        Optional<Price> foundPrice = priceRepository.findTopByProductIdAndBrandIdAndStartDate(
+        List<Price> foundPrices = priceRepository.findPricesByProductIdAndBrandIdAndStartDate(
                 35455L, 1, applicationDate);
 
-        assertTrue(foundPrice.isPresent());
-        assertEquals(new BigDecimal("38.95"), foundPrice.get().getPrice());
+        assertFalse(foundPrices.isEmpty());
+        assertEquals(new BigDecimal("38.95"), foundPrices.get(0).getPrice());
     }
 
     @Test
-    public void testFindFirstByProductIdAndBrandIdAndStartDate_NotFound() {
-        Long productId = 1L; // Example product ID
-        Integer brandId = 1; // Example brand ID
+    public void testFindPricesByProductIdAndBrandIdAndStartDate_NotFound() {
+        Long productId = 1L;
+        Integer brandId = 1;
         LocalDateTime applicationDate = LocalDateTime.of(2020, 6, 15, 12, 0); // Current date for testing
 
-        Optional<Price> result = priceRepository.findTopByProductIdAndBrandIdAndStartDate(
+        List<Price> result = priceRepository.findPricesByProductIdAndBrandIdAndStartDate(
                 productId, brandId, applicationDate);
 
-        assertFalse(result.isPresent(), "Expected no price to be found");
+        assertTrue(result.isEmpty(), "Expected no price to be found");
     }
-
 }

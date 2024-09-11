@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface PriceRepository extends JpaRepository<Price, Long> {
@@ -20,9 +19,4 @@ public interface PriceRepository extends JpaRepository<Price, Long> {
             @Param("productId") Long productId,
             @Param("brandId") Integer brandId,
             @Param("applicationDate") LocalDateTime applicationDate);
-
-    default Optional<Price> findTopByProductIdAndBrandIdAndStartDate(Long productId, Integer brandId, LocalDateTime applicationDate) {
-        return findPricesByProductIdAndBrandIdAndStartDate(productId, brandId, applicationDate).stream().findFirst();
-    }
 }
-

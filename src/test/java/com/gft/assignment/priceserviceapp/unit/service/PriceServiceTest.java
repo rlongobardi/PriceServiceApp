@@ -11,7 +11,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
@@ -27,31 +27,31 @@ public class PriceServiceTest {
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.openMocks(this); // Initialize mocks
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void testGetApplicablePrice() {
+    public void testGetPrice_Success() {
         // Sample data for the test
         Price samplePrice = new Price(1L, 1, LocalDateTime.now().minusDays(1), LocalDateTime.now().plusDays(1), 1, 35455L, 1, new BigDecimal("35.50"), "EUR");
 
-        when(priceRepository.findTopByProductIdAndBrandIdAndStartDate(
+        when(priceRepository.findPricesByProductIdAndBrandIdAndStartDate(
                 anyLong(), anyInt(), any(LocalDateTime.class)))
-                .thenReturn(Optional.of(samplePrice));
+                .thenReturn(List.of(samplePrice)); // Return a list with the sample price
 
-        Optional<Price> price = priceService.getApplicablePrice(35455L, 1, LocalDateTime.now());
+        Price price = priceService.getPrice(1, 35455L, LocalDateTime.now());
 
-        assertEquals(samplePrice, price.get()); // Assert the result is correct
+        assertEquals(samplePrice, price);
     }
 
     @Test
-    public void testGetApplicablePrice_NotFound() {
-        when(priceRepository.findTopByProductIdAndBrandIdAndStartDate(
+    public void testGetPrice_NotFound() {
+        when(priceRepository.findPricesByProductIdAndBrandIdAndStartDate(
                 anyLong(), anyInt(), any(LocalDateTime.class)))
-                .thenReturn(Optional.empty());
+                .thenReturn(List.of());
 
-        Optional<Price> price = priceService.getApplicablePrice(35455L, 1, LocalDateTime.now());
+        Price price = priceService.getPrice(1, 35455L, LocalDateTime.now());
 
-        assertEquals(Optional.empty(), price); // Assert the result is empty
+        assertEquals(null, price);
     }
 }

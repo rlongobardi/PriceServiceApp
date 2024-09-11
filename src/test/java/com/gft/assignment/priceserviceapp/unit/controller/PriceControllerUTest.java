@@ -1,7 +1,6 @@
 package com.gft.assignment.priceserviceapp.unit.controller;
 
 import com.gft.assignment.priceserviceapp.controller.PriceController;
-import com.gft.assignment.priceserviceapp.exceptions.PriceNotFoundException;
 import com.gft.assignment.priceserviceapp.model.Price;
 import com.gft.assignment.priceserviceapp.service.PriceService;
 import org.junit.jupiter.api.Test;
@@ -13,10 +12,8 @@ import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 class PriceControllerUTest {
@@ -35,9 +32,9 @@ class PriceControllerUTest {
     void testGetPrice_Success() {
         Price price = new Price();
         price.setPrice(BigDecimal.valueOf(35.50));
-        when(priceService.getApplicablePrice(35455L, 1, LocalDateTime.parse("2020-06-14T10:00:00"))).thenReturn(Optional.of(price));
+        when(priceService.getPrice(1, 35455L, LocalDateTime.parse("2020-06-14T10:00:00"))).thenReturn(price);
 
-        ResponseEntity<?> response = priceController.getPrice(LocalDateTime.parse("2020-06-14T10:00:00"), 35455L, 1);
+        ResponseEntity<?> response = priceController.getPrice("2020-06-14T10:00:00", 35455L, 1);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(price, response.getBody());
@@ -45,12 +42,10 @@ class PriceControllerUTest {
 
     @Test
     void testGetPrice_NotFound() {
-        when(priceService.getApplicablePrice(35455L, 1, LocalDateTime.parse("2020-06-14T10:00:00"))).thenReturn(Optional.empty());
+        when(priceService.getPrice(1, 35455L, LocalDateTime.parse("2020-06-14T10:00:00"))).thenReturn(null);
 
-        PriceNotFoundException exception = assertThrows(PriceNotFoundException.class, () -> {
-            priceController.getPrice(LocalDateTime.parse("2020-06-14T10:00:00"), 35455L, 1);
-        });
+        ResponseEntity<?> response = priceController.getPrice("2020-06-14T10:00:00", 35455L, 1);
 
-        assertEquals("Price not found for productId: 35455 and brandId: 1", exception.getMessage());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 }

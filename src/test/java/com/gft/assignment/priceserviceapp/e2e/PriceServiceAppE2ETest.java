@@ -49,7 +49,7 @@ public class PriceServiceAppE2ETest {
                 .queryParam("productId", 35455)
                 .queryParam("brandId", 1)
                 .when()
-                .get("/v1/price")
+                .get("/api/v1/prices")
                 .then()
                 .log().all()
                 .statusCode(200)

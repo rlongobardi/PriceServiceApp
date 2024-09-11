@@ -13,7 +13,7 @@ This application provides pricing information based on product ID and brand ID.
 ## Testing
 To run the tests, use:
 ./gradlew test
-
+to run E2E test be sure u started the app first.
 
 ## Code Specifications
 Java 17

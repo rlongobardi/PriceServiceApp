@@ -9,8 +9,7 @@ public class CustomHealthIndicator implements HealthIndicator {
 
     @Override
     public Health health() {
-        // Perform your custom health check logic here
-        boolean isHealthy = checkSomeService(); // Replace with your health check logic
+        boolean isHealthy = checkSomeService();
 
         if (isHealthy) {
             return Health.up().withDetail("Custom Service", "Available").build();
@@ -20,7 +19,6 @@ public class CustomHealthIndicator implements HealthIndicator {
     }
 
     private boolean checkSomeService() {
-        // Implement your health check logic
-        return true; // or false based on the health check
+        return true;
     }
 }

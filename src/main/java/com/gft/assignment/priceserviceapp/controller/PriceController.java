@@ -28,12 +28,11 @@ public class PriceController {
         try {
             applicationDate = LocalDateTime.parse(applicationDateStr);
         } catch (DateTimeParseException e) {
-            return ResponseEntity.badRequest().build(); // Return 400 Bad Request
+            return ResponseEntity.badRequest().build();
         }
 
         Price price = priceService.getPrice(brandId, productId, applicationDate);
         if (price == null) {
-            System.out.println("No prices found for productId: " + productId + " and brandId: " + brandId);
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(price);

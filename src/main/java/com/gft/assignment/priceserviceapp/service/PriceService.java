@@ -15,18 +15,15 @@ public class PriceService {
     private PriceRepository priceRepository;
 
     public Price getPrice(Integer brandId, Long productId, LocalDateTime applicationDate) {
-        // Fetch all applicable prices based on product ID, brand ID, and application date
-        List<Price> prices = priceRepository.findPricesByProductIdAndBrandIdAndStartDate(
+        final List<Price> prices = priceRepository.findPricesByProductIdAndBrandIdAndStartDate(
                 productId, brandId, applicationDate);
 
-        // If no prices are found, return null
         if (prices.isEmpty()) {
             return null;
         }
 
-        // Find the price with the highest priority
         return prices.stream()
                 .max((p1, p2) -> p1.getPriority().compareTo(p2.getPriority()))
-                .orElse(null); // This line is technically redundant since we check for empty list above
+                .orElse(null);
     }
 }

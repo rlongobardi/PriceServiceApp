@@ -10,6 +10,13 @@ This application provides pricing information based on product ID and brand ID.
    ```bash
    ./gradlew bootRun
 
+## API call & CURL example with success:
+
+curl -X GET "http://localhost:8080/api/v1/prices?applicationDate=2024-09-10T16:00:00&productId=35455&brandId=1" -H "
+Accept: application/json"
+
+![img.png](img.png)
+
 ## Testing
 To run the tests, use:
 ./gradlew test
